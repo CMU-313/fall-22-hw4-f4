@@ -1,0 +1,87 @@
+openapi: 3.0.3
+info:
+  title: Swagger Application Success Predictor
+  description: |-
+    This is an API that predicts whether a student will be of high quality based on their application.
+  version: 1.0.0
+tags:
+  - name: predict
+    description: Predict application success
+paths:
+  /predict/:
+    get:
+      tags:
+        - predict
+      summary: Predict one student's success based on their application
+      description: Get the quality of a student (average, above average, exemplar) based on their predicted G3 score
+      operationId: singlePredict
+      parameters:
+        - in: query
+          name: G1
+          description: First period grade
+          required: true
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+            maximum: 20
+        - in: query
+          name: G2
+          description: Second period grade
+          required: true
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+            maximum: 20
+        - in: query
+          name: Failures
+          description: Number of past class failures
+          required: true
+          schema:
+            type: integer
+            format: int64
+            minimum: 1
+            maximum: 4
+        - in: query
+          name: Higher
+          description: Wants to take higher education
+          required: true
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Predict'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Predict'
+        '400':
+          description: Invalid G1, G2, Failutre, or Higher values supplied
+        '404':
+          description: G1, G2, Failutre, or Higher values not found
+components:
+  schemas:
+    Predict:
+      type: object
+      properties:
+        G1:
+          type: integer
+          format: int64
+          example: 10
+        G2:
+          type: integer
+          format: int64
+          example: 20
+        Failures:
+          type: integer
+          format: int32
+          example: 2
+        Higher:
+          type: boolean
+          example: False
+      xml:
+        name: order
