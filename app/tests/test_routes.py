@@ -133,6 +133,7 @@ def test_predict_missing_params():
     response = client.get(url, query_string=data)
     assert response.status_code == 404
 
+
     # missing all params
     data={}
     response = client.get(url, query_string=data)
@@ -143,7 +144,7 @@ def test_predict_missing_params():
     response = client.get(url, json=json)
     response = client.get(url, query_string=data)
     assert response.status_code == 404
-    
+
 
 # if some params are missing and others are invalid, status code = 404
 def test_predict_missing_and_invalid():
