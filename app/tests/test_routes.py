@@ -1,3 +1,4 @@
+import json
 from flask import Flask
 
 from app.handlers.routes import configure_routes
@@ -25,6 +26,14 @@ def test_predict_success():
 
     assert response.status_code == 200
     assert response.get_data() in set(b'average', b'above average', b'exemplar')
+
+    # json test
+    json = json.dumps(data)
+    response = client.get(url, json=json)
+    assert response.status_code == 200
+    assert response.get_data() in set(b'average', b'above average', b'exemplar')
+        
+    response = client.get(url, json=data)
 
 def test_predict_success_edge():
     app = Flask(__name__)
@@ -54,7 +63,12 @@ def test_predict_missing_G1():
     url = '/predict'
     data={'G2':10, 'Failures':1, 'Higher':False}
     response = client.get(url, query_string=data)
+    assert response.status_code == 404
 
+    # json test
+    json = json.dumps(data)
+    response = client.get(url, json=json)
+    response = client.get(url, query_string=data)
     assert response.status_code == 404
 
 def test_predict_missing_G2():
@@ -64,7 +78,12 @@ def test_predict_missing_G2():
     url = '/predict'
     data={'G1':10, 'Failures':1, 'Higher':False}
     response = client.get(url, query_string=data)
+    assert response.status_code == 404
 
+    # json test
+    json = json.dumps(data)
+    response = client.get(url, json=json)
+    response = client.get(url, query_string=data)
     assert response.status_code == 404
 
 def test_predict_missing_Failures():
@@ -74,7 +93,12 @@ def test_predict_missing_Failures():
     url = '/predict'
     data={'G1':10, 'G2':10, 'Higher':False}
     response = client.get(url, query_string=data)
+    assert response.status_code == 404
 
+    # json test
+    json = json.dumps(data)
+    response = client.get(url, json=json)
+    response = client.get(url, query_string=data)
     assert response.status_code == 404
 
 def test_predict_missing_Higher():
@@ -84,7 +108,12 @@ def test_predict_missing_Higher():
     url = '/predict'
     data={'G1':10, 'G2':10, 'Failures':1}
     response = client.get(url, query_string=data)
-    
+    assert response.status_code == 404
+
+    # json test
+    json = json.dumps(data)
+    response = client.get(url, json=json)
+    response = client.get(url, query_string=data)
     assert response.status_code == 404
 
 def test_predict_missing_params():
@@ -98,10 +127,24 @@ def test_predict_missing_params():
     response = client.get(url, query_string=data)
     assert response.status_code == 404
 
+    # json test
+    json = json.dumps(data)
+    response = client.get(url, json=json)
+    response = client.get(url, query_string=data)
+    assert response.status_code == 404
+
+
     # missing all params
     data={}
     response = client.get(url, query_string=data)
     assert response.status_code == 404
+    
+    # json test
+    json = json.dumps(data)
+    response = client.get(url, json=json)
+    response = client.get(url, query_string=data)
+    assert response.status_code == 404
+
 
 # if some params are missing and others are invalid, status code = 404
 def test_predict_missing_and_invalid():
@@ -111,7 +154,12 @@ def test_predict_missing_and_invalid():
     url = '/predict'
     data={'G1':30, 'G2':10, 'Failures':False}
     response = client.get(url, query_string=data)
+    assert response.status_code == 404
 
+    # json test
+    json = json.dumps(data)
+    response = client.get(url, json=json)
+    response = client.get(url, query_string=data)
     assert response.status_code == 404
 
 
@@ -127,10 +175,20 @@ def test_predict_invalid_G1():
     data={'G1':21, 'G2':10, 'Failures':1, 'Higher':True}
     response = client.get(url, query_string=data)
     assert response.status_code == 400
+
+    # json test
+    json = json.dumps(data)
+    response = client.get(url, json=json)
+    assert response.status_code == 400
     
     # G1 too low
     data={'G1':-1, 'G2':10, 'Failures':1, 'Higher':True}
     response = client.get(url, query_string=data)
+    assert response.status_code == 400
+
+    # json test
+    json = json.dumps(data)
+    response = client.get(url, json=json)
     assert response.status_code == 400
 
 def test_predict_invalid_G2():
@@ -144,9 +202,19 @@ def test_predict_invalid_G2():
     response = client.get(url, query_string=data)
     assert response.status_code == 400
 
+    # json test
+    json = json.dumps(data)
+    response = client.get(url, json=json)
+    assert response.status_code == 400
+
     # G2 too low
     data={'G1':10, 'G2':-1, 'Failures':1, 'Higher':True}
     response = client.get(url, query_string=data)
+    assert response.status_code == 400
+
+    # json test
+    json = json.dumps(data)
+    response = client.get(url, json=json)
     assert response.status_code == 400
 
 def test_predict_invalid_Failures():
@@ -160,9 +228,19 @@ def test_predict_invalid_Failures():
     response = client.get(url, query_string=data)
     assert response.status_code == 400
 
+    # json test
+    json = json.dumps(data)
+    response = client.get(url, json=json)
+    assert response.status_code == 400
+
     # Failures too low
     data={'G1':10, 'G2':10, 'Failures':0, 'Higher':True}
     response = client.get(url, query_string=data)
+    assert response.status_code == 400
+
+    # json test
+    json = json.dumps(data)
+    response = client.get(url, json=json)
     assert response.status_code == 400
 
 def test_predict_invalid_Higher():
@@ -175,6 +253,11 @@ def test_predict_invalid_Higher():
     response = client.get(url, query_string=data)
     assert response.status_code == 400
 
+    # json test
+    json = json.dumps(data)
+    response = client.get(url, json=json)
+    assert response.status_code == 400
+
 def test_predict_invalid_params():
     app = Flask(__name__)
     configure_routes(app)
@@ -183,4 +266,9 @@ def test_predict_invalid_params():
 
     data={'G1':-5, 'G2':17, 'Failures':10, 'Higher':'oops'}
     response = client.get(url, query_string=data)
+    assert response.status_code == 400
+
+    # json test
+    json = json.dumps(data)
+    response = client.get(url, json=json)
     assert response.status_code == 400
