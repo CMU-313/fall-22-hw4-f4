@@ -1,20 +1,12 @@
-import this
 from flask import Flask, jsonify, request
 import joblib
 import pandas as pd
 import numpy as np
-import os
 from sklearn.ensemble import RandomForestClassifier as rf
 import sklearn
 
 def configure_routes(app):
-
-    # this_dir = os.path.dirname(__file__)
-    # model_path = os.path.join(this_dir, "model.pkl")
-    # clf = joblib.load(model_path)
-    root_dir = os.path.abspath(os.path.join(os.getcwd(), "../.."))
-    data_path = os.path.join(root_dir, "data/student-mat.csv")
-    df = pd.read_csv(data_path)
+    df = pd.read_csv("../../data/student-mat.csv")
     df['qual_student'] = np.where(df['G3']>=15, 1, 0)
     include = ['failures','higher','G1','G2','qual_student']
     df.drop(columns=df.columns.difference(include), inplace=True)  # only using selected features
@@ -22,7 +14,7 @@ def configure_routes(app):
     X = df.drop(['qual_student'], axis = 1)
     y = df['qual_student']
     rfc = RandomForestClassifier(criterion='gini', 
-                                n_estimators=1000,
+                                n_estimators=200,
                                 max_depth=10,
                                 min_samples_leaf=6,
                                 max_features='auto',
