@@ -1,6 +1,5 @@
 import json
-import this
-from flask import Flask, jsonify, request
+from flask import jsonify, request
 import joblib
 import pandas as pd
 import numpy as np
@@ -34,8 +33,7 @@ def configure_routes(app):
                 G2 = response['G2']
                 Failures = response['Failures']
                 Higher = response['Higher']
-        except Exception as e:
-            print(e)
+        except:
             return 'Missing value', 404
 
         if (int(G1) < 0 or int(G1) > 20):
@@ -53,6 +51,7 @@ def configure_routes(app):
             'Failures': pd.Series(Failures),
             'Higher': pd.Series(Higher)
         })
+
         query = pd.get_dummies(query_df)
         prediction = clf.predict(query)
         prediction = np.ndarray.item(prediction)
