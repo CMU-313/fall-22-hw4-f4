@@ -46,10 +46,22 @@ def test_predict_success_edge():
     assert response.status_code == 200
     assert response.get_data() in set([b'"average"\n', b'"above average"\n', b'"exemplar"\n'])
 
+    # json test
+    json_data = json.dumps(data)
+    response = client.get(url, json=json_data)
+    assert response.status_code == 200
+    assert response.get_data() in set([b'"average"\n', b'"above average"\n', b'"exemplar"\n'])
+
     # upper end edge cases
     data={'G1':20, 'G2':20,'Failures':4, 'Higher':True}
     response = client.get(url, query_string=data)
 
+    assert response.status_code == 200
+    assert response.get_data() in set([b'"average"\n', b'"above average"\n', b'"exemplar"\n'])
+
+    # json test
+    json_data = json.dumps(data)
+    response = client.get(url, json=json_data)
     assert response.status_code == 200
     assert response.get_data() in set([b'"average"\n', b'"above average"\n', b'"exemplar"\n'])
 
@@ -64,9 +76,8 @@ def test_predict_missing_G1():
     assert response.status_code == 404
 
     # json test
-    json = json.dumps(data)
-    response = client.get(url, json=json)
-    response = client.get(url, query_string=data)
+    json_data = json.dumps(data)
+    response = client.get(url, json=json_data)
     assert response.status_code == 404
 
 def test_predict_missing_G2():
@@ -79,9 +90,8 @@ def test_predict_missing_G2():
     assert response.status_code == 404
 
     # json test
-    json = json.dumps(data)
-    response = client.get(url, json=json)
-    response = client.get(url, query_string=data)
+    json_data = json.dumps(data)
+    response = client.get(url, json=json_data)
     assert response.status_code == 404
 
 def test_predict_missing_Failures():
@@ -94,9 +104,8 @@ def test_predict_missing_Failures():
     assert response.status_code == 404
 
     # json test
-    json = json.dumps(data)
-    response = client.get(url, json=json)
-    response = client.get(url, query_string=data)
+    json_data = json.dumps(data)
+    response = client.get(url, json=json_data)
     assert response.status_code == 404
 
 def test_predict_missing_Higher():
@@ -109,9 +118,8 @@ def test_predict_missing_Higher():
     assert response.status_code == 404
 
     # json test
-    json = json.dumps(data)
-    response = client.get(url, json=json)
-    response = client.get(url, query_string=data)
+    json_data = json.dumps(data)
+    response = client.get(url, json=json_data)
     assert response.status_code == 404
 
 def test_predict_missing_params():
@@ -126,9 +134,8 @@ def test_predict_missing_params():
     assert response.status_code == 404
 
     # json test
-    json = json.dumps(data)
-    response = client.get(url, json=json)
-    response = client.get(url, query_string=data)
+    json_data = json.dumps(data)
+    response = client.get(url, json=json_data)
     assert response.status_code == 404
 
 
@@ -138,9 +145,8 @@ def test_predict_missing_params():
     assert response.status_code == 404
     
     # json test
-    json = json.dumps(data)
-    response = client.get(url, json=json)
-    response = client.get(url, query_string=data)
+    json_data = json.dumps(data)
+    response = client.get(url, json=json_data)
     assert response.status_code == 404
 
 
@@ -155,9 +161,8 @@ def test_predict_missing_and_invalid():
     assert response.status_code == 404
 
     # json test
-    json = json.dumps(data)
-    response = client.get(url, json=json)
-    response = client.get(url, query_string=data)
+    json_data = json.dumps(data)
+    response = client.get(url, json=json_data)
     assert response.status_code == 404
 
 
@@ -175,8 +180,8 @@ def test_predict_invalid_G1():
     assert response.status_code == 400
 
     # json test
-    json = json.dumps(data)
-    response = client.get(url, json=json)
+    json_data = json.dumps(data)
+    response = client.get(url, json=json_data)
     assert response.status_code == 400
     
     # G1 too low
@@ -185,8 +190,8 @@ def test_predict_invalid_G1():
     assert response.status_code == 400
 
     # json test
-    json = json.dumps(data)
-    response = client.get(url, json=json)
+    json_data = json.dumps(data)
+    response = client.get(url, json=json_data)
     assert response.status_code == 400
 
 def test_predict_invalid_G2():
@@ -201,8 +206,8 @@ def test_predict_invalid_G2():
     assert response.status_code == 400
 
     # json test
-    json = json.dumps(data)
-    response = client.get(url, json=json)
+    json_data = json.dumps(data)
+    response = client.get(url, json=json_data)
     assert response.status_code == 400
 
     # G2 too low
@@ -211,8 +216,8 @@ def test_predict_invalid_G2():
     assert response.status_code == 400
 
     # json test
-    json = json.dumps(data)
-    response = client.get(url, json=json)
+    json_data = json.dumps(data)
+    response = client.get(url, json=json_data)
     assert response.status_code == 400
 
 def test_predict_invalid_Failures():
@@ -227,8 +232,8 @@ def test_predict_invalid_Failures():
     assert response.status_code == 400
 
     # json test
-    json = json.dumps(data)
-    response = client.get(url, json=json)
+    json_data = json.dumps(data)
+    response = client.get(url, json=json_data)
     assert response.status_code == 400
 
     # Failures too low
@@ -237,8 +242,8 @@ def test_predict_invalid_Failures():
     assert response.status_code == 400
 
     # json test
-    json = json.dumps(data)
-    response = client.get(url, json=json)
+    json_data = json.dumps(data)
+    response = client.get(url, json=json_data)
     assert response.status_code == 400
 
 def test_predict_invalid_Higher():
@@ -252,8 +257,8 @@ def test_predict_invalid_Higher():
     assert response.status_code == 400
 
     # json test
-    json = json.dumps(data)
-    response = client.get(url, json=json)
+    json_data = json.dumps(data)
+    response = client.get(url, json=json_data)
     assert response.status_code == 400
 
 def test_predict_invalid_params():
@@ -267,6 +272,6 @@ def test_predict_invalid_params():
     assert response.status_code == 400
 
     # json test
-    json = json.dumps(data)
-    response = client.get(url, json=json)
+    json_data = json.dumps(data)
+    response = client.get(url, json=json_data)
     assert response.status_code == 400
