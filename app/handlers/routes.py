@@ -3,28 +3,13 @@ from flask import jsonify, request
 import joblib
 import pandas as pd
 import numpy as np
-from sklearn.ensemble import RandomForestClassifier as rf
-import sklearn
+import os
 
 def configure_routes(app):
-    df = pd.read_csv("../../data/student-mat.csv")
-    df['qual_student'] = np.where(df['G3']>=15, 1, 0)
-    include = ['failures','higher','G1','G2','qual_student']
-    df.drop(columns=df.columns.difference(include), inplace=True)  # only using selected features
 
-    X = df.drop(['qual_student'], axis = 1)
-    y = df['qual_student']
-    rfc = RandomForestClassifier(criterion='gini', 
-                                n_estimators=200,
-                                max_depth=10,
-                                min_samples_leaf=6,
-                                max_features='auto',
-                                oob_score=True,
-                                random_state=42,
-                                n_jobs=-1,
-                                verbose=1)
-    rfc.fit(X, y)
-    joblib.dump(rfc, 'model.pkl')
+    this_dir = os.path.dirname(__file__)
+    model_path = os.path.join(this_dir, "model.pkl")
+    clf = joblib.load(model_path)
 
     @app.route('/')
     def hello():
@@ -65,7 +50,6 @@ def configure_routes(app):
             'G2': pd.Series(G2),
             'Failures': pd.Series(Failures),
             'Higher': pd.Series(Higher)
-
         })
 
         query = pd.get_dummies(query_df)
@@ -83,4 +67,3 @@ def configure_routes(app):
             return 'Invalid prediction calculated', 400
         
         return jsonify(category)
-
