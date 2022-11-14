@@ -57,11 +57,11 @@ def configure_routes(app):
         prediction = np.ndarray.item(prediction)
         
         category = ''
-        if (prediction == 1):
+        if (prediction == 0):
             category = 'average'
-        elif (prediction == 2):
+        elif (prediction == 1):
             category = 'above average'
-        elif (prediction == 3):
+        elif (prediction == 2):
             category = 'exemplar'
         else:
             return 'Invalid prediction calculated', 400
